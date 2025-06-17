@@ -1,6 +1,6 @@
 
 const {Router} = require('express');
-const { loginUser, getUsers } = require('../controllers/auth.controllers');
+const { loginUser, getUsers, signUpUser } = require('../controllers/auth.controllers');
 const { check } = require('express-validator');
 const { validateInput } = require('../middleware/validateInput');
 
@@ -13,6 +13,13 @@ router.post('/login', [
     validateInput
 ], loginUser);
 
-router.get('/login', getUsers);
+//router.get('/login', getUsers);
+
+router.post('/signup', [
+    check('name', 'name es requerido').notEmpty().isString(),
+    check('email', 'email es requerido').notEmpty().isString(),
+    check('password', 'password es requerido').notEmpty().isString(),
+    validateInput
+], signUpUser);
 
 module.exports = router;

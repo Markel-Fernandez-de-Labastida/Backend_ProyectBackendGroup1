@@ -10,7 +10,7 @@ const getsearchMovieByTitle = async (title) => {
     try {
         const client = await pool.connect();
         
-        const answer = client.query(movies.getsearchMovieByTitle, [title]);
+        const answer = await client.query(movies.getsearchMovieByTitle, [title]);
         console.log(answer);
 
         console.log(answer);
@@ -38,7 +38,7 @@ const insertMovie = async (title, image_url, year_movie, director, genre_id, dur
     try {
         const client = await pool.connect();
         
-        const answer = client.query(movies.insertMovie, [title, year_movie, director, genre_id, duration, synopsis]);
+        const answer = await client.query(movies.insertMovie, [title, year_movie, director, genre_id, duration, synopsis]);
         console.log(answer);
 
         console.log(answer);
@@ -65,7 +65,7 @@ const updateMovie = async (title, image_url, year_movie, director, genre_id, dur
     try {
         const client = await pool.connect();
         
-        const answer = client.query(movies.updateMovie, [title, year_movie, director, genre_id, duration, synopsis, id]);
+        const answer = await client.query(movies.updateMovie, [title, year_movie, director, genre_id, duration, synopsis, id]);
         console.log(answer);
 
         console.log(answer);
@@ -85,7 +85,7 @@ const deleteMovie = async (id) => {
     try {
         const client = await pool.connect();
         
-        const answer = client.query(movies.deleteMovie[id]);
+        const answer = await client.query(movies.deleteMovie[id]);
         console.log(answer);
 
         console.log(answer);
@@ -106,7 +106,7 @@ const deleteMovieFromFavorites = async (id) => {
     try {
         const client = await pool.connect();
         
-        const answer = client.query(movies.deleteMovieFromFavorites, [id]);
+        const answer = await client.query(movies.deleteMovieFromFavorites, [id]);
         console.log(answer);
 
         console.log(answer);

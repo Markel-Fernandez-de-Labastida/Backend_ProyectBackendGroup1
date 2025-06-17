@@ -9,7 +9,7 @@ const getAllUsers = async () => {
         
         const client = await pool.connect()
         console.log('client:', client)
-        const answer = client.query(users.getAllUsers);
+        const answer = await client.query(users.getAllUsers);
         console.log(answer);
         client.release();
         return answer.rows;
@@ -83,7 +83,7 @@ const insertUser = async (name_user, email, password_hash, role_id) => {
         client.release();
         return answer.rows;
     } catch (error) {
-        return error
+        throw error
     }
 }
 
