@@ -9,7 +9,7 @@ const getAllUsers = async () => {
         
         const client = await pool.connect()
         console.log('client:', client)
-        const answer = client.query(users.getAllUsers);
+        const answer = await client.query(users.getAllUsers);
         console.log(answer);
         client.release();
         return answer.rows;
@@ -30,35 +30,13 @@ const getUserByEmail = async (email) => {
         
         const client = await pool.connect();
         
-        const answer = client.query(users.getUserByEmail, [email]);
+        const answer = await client.query(users.getUserByEmail, [email]);
         console.log(answer);
 
         console.log(answer);
         client.release();
         return answer.rows[0];
 
-    } catch (error) {
-        return error
-    }
-}
-
-
-
-/**
- * 
- * @param {*} user 
- * @returns 
- */
-const getUserFavorites = async (user) => {
-    try {
-        const client = await pool.connect();
-        
-        const answer = client.query(movies.getUserFavorites, [user]);
-        console.log(answer);
-
-        console.log(answer);
-        client.release();
-        return answer.rows;
     } catch (error) {
         return error
     }
@@ -76,7 +54,7 @@ const insertUser = async (name_user, email, password_hash, role_id) => {
     try {
         const client = await pool.connect();
         
-        const answer = client.query(users.createUser, [name_user, email, password_hash, role_id]);
+        const answer = await client.query(users.createUser, [name_user, email, password_hash, role_id]);
         console.log(answer);
 
         console.log(answer);
@@ -101,7 +79,7 @@ const updateUser = async (name, id) => {
     try {
         const client = await pool.connect();
         
-        const answer = client.query(users.updateUser, [name, id]);
+        const answer = await client.query(users.updateUser, [name, id]);
         console.log(answer);
 
         console.log(answer);
@@ -121,7 +99,7 @@ const deleteUser = async (id) => {
     try {
         const client = await pool.connect();
         
-        const answer = client.query(users.deleteUser, [id]);
+        const answer = await client.query(users.deleteUser, [id]);
         console.log(answer);
 
         console.log(answer);
@@ -135,7 +113,6 @@ const deleteUser = async (id) => {
 module.exports = {
     getAllUsers,
     getUserByEmail,
-    getUserFavorites,
     insertUser,
     updateUser,
     deleteUser,
