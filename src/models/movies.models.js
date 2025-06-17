@@ -1,60 +1,45 @@
 const { users, movies} = require('../models/querys');
 const dbconnect = require('../utils/dbConnect');
-let pool;
 
-
-
-const getAllUsers = async () => {
-    try {
-        
-        const client = await pool.connect();
-        
-        const answer = client.query(users.getAllUsers);
-        console.log(answer);
-
-        console.log(answer);
-        client.release();
-        return answer.rows;
-
-    } catch (error) {
-        return error
-    }
-}
 
 /**
  * 
- * @param {*} email 
+ * @param {*} title 
  * @returns 
  */
-const getUserByEmail = async (email) => {
+const getsearchMovieByTitle = async (title) => {
     try {
-        
         const client = await pool.connect();
         
-        const answer = client.query(users.getUserByEmail, [email]);
+        const answer = client.query(movies.getsearchMovieByTitle, [title]);
         console.log(answer);
 
         console.log(answer);
         client.release();
         return answer.rows;
-
     } catch (error) {
         return error
     }
-}
 
+}
 
 
 /**
  * 
- * @param {*} user 
+ * @param {*} title 
+ * @param {*} image_url 
+ * @param {*} year_movie 
+ * @param {*} director 
+ * @param {*} genre_id 
+ * @param {*} duration 
+ * @param {*} synopsis 
  * @returns 
  */
-const getUserFavorites = async (user) => {
+const insertMovie = async (title, image_url, year_movie, director, genre_id, duration, synopsis) => {
     try {
         const client = await pool.connect();
         
-        const answer = client.query(movies.getUserFavorites, [user]);
+        const answer = client.query(movies.insertMovie, [title, year_movie, director, genre_id, duration, synopsis]);
         console.log(answer);
 
         console.log(answer);
@@ -67,42 +52,21 @@ const getUserFavorites = async (user) => {
 
 /**
  * 
- * @param {*} name_user 
- * @param {*} email 
- * @param {*} password_hash 
- * @param {*} role_id 
- * @returns 
- */
-const insertUser = async (name_user, email, password_hash, role_id) => {
-    try {
-        const client = await pool.connect();
-        
-        const answer = client.query(users.createUser, [name_user, email, password_hash, role_id]);
-        console.log(answer);
-
-        console.log(answer);
-        client.release();
-        return answer.rows;
-    } catch (error) {
-        return error
-    }
-}
-
-
-
-
-
-/**
- * 
- * @param {*} name 
+ * @param {*} title 
+ * @param {*} image_url 
+ * @param {*} year_movie 
+ * @param {*} director 
+ * @param {*} genre_id 
+ * @param {*} duration 
+ * @param {*} synopsis 
  * @param {*} id 
  * @returns 
  */
-const updateUser = async (name, id) => {
+const updateMovie = async (title, image_url, year_movie, director, genre_id, duration, synopsis, id) => {
     try {
         const client = await pool.connect();
         
-        const answer = client.query(users.updateUser, [name, id]);
+        const answer = client.query(movies.updateMovie, [title, year_movie, director, genre_id, duration, synopsis, id]);
         console.log(answer);
 
         console.log(answer);
@@ -118,11 +82,11 @@ const updateUser = async (name, id) => {
  * @param {*} id 
  * @returns 
  */
-const deleteUser = async (id) => {
+const deleteMovie = async (id) => {
     try {
         const client = await pool.connect();
         
-        const answer = client.query(users.deleteUser, [id]);
+        const answer = client.query(movies.deleteMovie[id]);
         console.log(answer);
 
         console.log(answer);
@@ -131,13 +95,34 @@ const deleteUser = async (id) => {
     } catch (error) {
         return error
     }
+
+}
+
+/**
+ * 
+ * @param {*} id 
+ * @returns 
+ */
+const deleteMovieFromFavorites = async (id) => {
+    try {
+        const client = await pool.connect();
+        
+        const answer = client.query(movies.deleteMovieFromFavorites, [id]);
+        console.log(answer);
+
+        console.log(answer);
+        client.release();
+        return answer.rows;
+    } catch (error) {
+        return error
+    }
+
 }
 
 module.exports = {
-    getAllUsers,
-    getUserByEmail,
-    getUserFavorites,
-    insertUser,
-    updateUser,
-    deleteUser,
-};
+    getsearchMovieByTitle,
+    insertMovie,
+    updateMovie,
+    deleteMovieFromFavorites,
+    deleteMovie
+}
