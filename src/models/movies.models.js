@@ -1,5 +1,4 @@
 const { users, movies} = require('../models/querys');
-const dbconnect = require('../utils/dbConnect');
 
 
 /**

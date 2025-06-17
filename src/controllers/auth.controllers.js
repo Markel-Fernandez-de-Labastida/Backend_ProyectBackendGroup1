@@ -1,7 +1,15 @@
 
 //const bcrypt = require('bcryptjs');
-const { createToken } = require('../utils/createToken');
+const { 
+    getAllUsers,
+    getUserByEmail,
+    getUserFavorites,
+    insertUser,
+    updateUser,
+    deleteUser
+ } = require('../models/users.models');
 
+const { createToken } = require('../utils/createToken');
 //importar conexión con bd pool
 // LOGIN
 
@@ -10,8 +18,9 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
     try {
         // await
-        const user = getUsersByEmail([email]);
-        if (!user.rows[0]) {
+        const user = await getUserByEmail(email);
+        // console.log(user);
+        if (!user.length !== 0) {
             return res.status(403).json({
                 ok: false,
                 msg: 'El usuario no existe.'
@@ -41,6 +50,7 @@ const loginUser = async (req, res) => {
         // if (user.rol === 'user')
         // res.redirect('/dashboard)
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             ok: false,
             msg: 'Por favor contacte con el administrador.'
@@ -48,6 +58,23 @@ const loginUser = async (req, res) => {
     }
 }
 
+const getUsers = async (req, res) => {
+    try {
+        const users = await getAllUsers()
+        //console.log(users)
+        res.status(200).json({
+            ok: true,
+            msg: 'Entra en getUsers'
+        })
+    } catch (error) {
+        //console.log({error})
+        res.status(500).json({
+            ok: false
+        })
+    }
+}
+
 module.exports = {
-    loginUser
+    loginUser,
+    getUsers
 }

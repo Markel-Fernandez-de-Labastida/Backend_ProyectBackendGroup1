@@ -1,23 +1,22 @@
 const { users, movies} = require('../models/querys');
-const dbconnect = require('../utils/dbConnect');
-let pool;
+const {bdConnect} = require('../utils/dbConnect')
+const pool = bdConnect()
 
 
 
 const getAllUsers = async () => {
     try {
         
-        const client = await pool.connect();
-        
+        const client = await pool.connect()
+        console.log('client:', client)
         const answer = client.query(users.getAllUsers);
-        console.log(answer);
-
         console.log(answer);
         client.release();
         return answer.rows;
 
     } catch (error) {
-        return error
+        console.log('error modelo', error)
+        throw error
     }
 }
 
@@ -36,7 +35,7 @@ const getUserByEmail = async (email) => {
 
         console.log(answer);
         client.release();
-        return answer.rows;
+        return answer.rows[0];
 
     } catch (error) {
         return error
