@@ -1,5 +1,5 @@
 
-//const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const { 
     getAllUsers,
     getUserByEmail,
@@ -17,16 +17,17 @@ const { createToken } = require('../utils/createToken');
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
     try {
-        // await
         const user = await getUserByEmail(email);
-        // console.log(user);
-        if (!user.length !== 0) {
+        console.log('USUARIO:', user);
+        if (!user) {
             return res.status(403).json({
                 ok: false,
                 msg: 'El usuario no existe.'
             })
         }
-        const verifyPassword = bcrypt.compareSync(password, user.rows[0].password);
+        console.log('PASSWORD:', {password}, 'HASH_PASSWORD:', user.password_hash)
+        const verifyPassword = bcrypt.compareSync(password, user.password_hash);
+        console.log(verifyPassword)
         if (!verifyPassword) {
             return res.status(403).json({
                 ok: false,
@@ -44,7 +45,10 @@ const loginUser = async (req, res) => {
                     msg: error
                 })
             })
-
+        return res.status(200).json({
+            ok: true, 
+            msg: 'Usuario logueado'
+        })
         // if (user.rol === 'admin')
         // res.redirect('/admin/movies)
         // if (user.rol === 'user')
