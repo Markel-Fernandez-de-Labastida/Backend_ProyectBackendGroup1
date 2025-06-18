@@ -16,7 +16,7 @@ const port = process.env.PORT || 3000;
 
 const app = express();
 
-const whiteList = ['http://localhost:3000', 'http://xxxx-front.render.com'];
+const whiteList = ['http://localhost:3000', 'http://localhost:5000', 'http://xxxx-front.render.com'];
 app.use(cors({
     origin: whiteList
 }));

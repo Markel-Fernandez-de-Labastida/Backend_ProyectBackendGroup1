@@ -3,6 +3,7 @@ const {Router} = require('express');
 const { loginUser, getUsers, signUpUser } = require('../controllers/auth.controllers');
 const { check } = require('express-validator');
 const { validateInput } = require('../middleware/validateInput');
+const { validateJWT } = require('../middleware/verifyToken');
 
 
 const router = Router();

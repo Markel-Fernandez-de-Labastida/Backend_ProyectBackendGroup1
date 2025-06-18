@@ -37,9 +37,14 @@ const loginUser = async (req, res) => {
             })
         }
         // CREAR TOKEN
+        let role;
+        if (role_id === 1) {
+            role = 'admin';
+        } else if (role_id === 2) {
+            role = 'user';
+        }
         let token;
-
-        await createToken(user.id, user.role)
+        await createToken(user.id, role)
             .then((resp) => token = resp)
             .catch((error) => {
                 return res.status(403).json({
@@ -51,10 +56,6 @@ const loginUser = async (req, res) => {
             ok: true, 
             msg: 'Usuario logueado'
         })
-        // if (user.rol === 'admin')
-        // res.redirect('/admin/movies)
-        // if (user.rol === 'user')
-        // res.redirect('/dashboard)
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -101,13 +102,21 @@ const signUpUser = async (req, res) => {
         // encriptar contraseña
         const salt = bcrypt.genSaltSync(10);
         const encryptedPassword = bcrypt.hashSync(password, salt);
-
+        let role_id;
         // añadir a la bbdd
-        const savedUser = await insertUser(name, email, encryptedPassword, 1);
-        console.log('SAVED USER', savedUser);
+        const savedUser = await insertUser(name, email, encryptedPassword, role_id = 2);
+        //console.log('SAVED USER', savedUser);
+
+        // DETERMINAR ROL SEGÚN SU ROLE_ID
+        let role;
+        if (role_id === 1) {
+            role = 'admin';
+        } else if (role_id === 2) {
+            role = 'user';
+        }
         // crear token
         let token;
-        await createToken(savedUser.id, savedUser.role)
+        await createToken(savedUser[0].id_user, role)
             .then((resp) => token = resp)
             .catch ((error) => {
                 return res.status(403).json({
