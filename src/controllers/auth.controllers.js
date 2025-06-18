@@ -1,13 +1,13 @@
 
 const bcrypt = require('bcryptjs');
-const { 
+const {
     getAllUsers,
     getUserByEmail,
     getUserFavorites,
     insertUser,
     updateUser,
     deleteUser
- } = require('../models/users.models');
+} = require('../models/users.models');
 
 const { createToken } = require('../utils/createToken');
 //importar conexión con bd pool
@@ -38,9 +38,9 @@ const loginUser = async (req, res) => {
         }
         // CREAR TOKEN
         let role;
-        if (role_id === 1) {
+        if (user.role_id === 1) {
             role = 'admin';
-        } else if (role_id === 2) {
+        } else if (user.role_id === 2) {
             role = 'user';
         }
         let token;
@@ -53,8 +53,10 @@ const loginUser = async (req, res) => {
                 })
             })
         return res.status(200).json({
-            ok: true, 
-            msg: 'Usuario logueado'
+            ok: true,
+            msg: 'Usuario logueado',
+            user,
+            token
         })
     } catch (error) {
         console.log(error);
@@ -64,22 +66,6 @@ const loginUser = async (req, res) => {
         })
     }
 }
-
-// const getUsers = async (req, res) => {
-//     try {
-//         const users = await getAllUsers()
-//         //console.log(users)
-//         res.status(200).json({
-//             ok: true,
-//             msg: 'Entra en getUsers'
-//         })
-//     } catch (error) {
-//         //console.log({error})
-//         res.status(500).json({
-//             ok: false
-//         })
-//     }
-// }
 
 /**
  * Función para registrar al usuario.
@@ -118,16 +104,16 @@ const signUpUser = async (req, res) => {
         let token;
         await createToken(savedUser[0].id_user, role)
             .then((resp) => token = resp)
-            .catch ((error) => {
+            .catch((error) => {
                 return res.status(403).json({
                     ok: false,
                     msg: error
                 })
             });
         return res.status(200).json({
-        ok: true,
-        savedUser,
-        token
+            ok: true,
+            savedUser,
+            token
         })
     } catch (error) {
         console.log(error);
@@ -136,11 +122,31 @@ const signUpUser = async (req, res) => {
             msg: "Contacte con el administrador."
         })
     }
-    
+
+}
+
+
+const renewToken = async (req, res) => {
+    const uid = req.uid;
+    const role = req.role;
+
+    let newToken;
+    await createToken(uid, role)
+        .then((resp) => newToken = resp)
+        .catch((error) => {
+            return res.status(403).json({
+                ok: false,
+                msg: error
+            })
+        });
+    return res.status(201).json({
+        ok: true,
+        newToken
+    })
 }
 
 module.exports = {
     loginUser,
-    //getUsers,
-    signUpUser
+    signUpUser,
+    renewToken
 }

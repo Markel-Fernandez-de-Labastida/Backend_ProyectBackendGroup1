@@ -1,9 +1,10 @@
 
 const {Router} = require('express');
-const { loginUser, getUsers, signUpUser } = require('../controllers/auth.controllers');
+const { loginUser, signUpUser, renewToken } = require('../controllers/auth.controllers');
 const { check } = require('express-validator');
 const { validateInput } = require('../middleware/validateInput');
 const { validateJWT } = require('../middleware/verifyToken');
+const { verifyRole } = require('../middleware/verifyRole');
 
 
 const router = Router();
@@ -22,5 +23,8 @@ router.post('/signup', [
     check('password', 'password es requerido').notEmpty().isString(),
     validateInput
 ], signUpUser);
+
+
+router.post('/renew', [validateJWT, verifyRole('user')], renewToken)
 
 module.exports = router;
