@@ -1,23 +1,29 @@
-const {Router} = require('express');
+const { Router } = require("express");
 const {
-    getMovieByTitle,
-    getUserFavorites,
-    insertMovie,
-    updateMovie,
-    deleteMovieFromFavorites,
-    deleteMovie
-} = require('../controllers/movies.controllers')
+  getMovieByTitle,
+  getUserFavorites,
+  insertMovie,
+  updateMovie,
+  deleteMovieFromFavorites,
+  deleteMovie,
+} = require("../controllers/movies.controllers");
+
+const upload = require("../utils/multer");
 
 const routes = Router();
 
-routes.get('/search/:title', [] , getMovieByTitle);
+//routes.get('/search/:title',[] , '');
 
-routes.get('/search', [], );
+routes.get("/search", getMovieByTitle);
 
-routes.get('/movies', [], getUserFavorites);
+routes.get("/movies", getUserFavorites);
 
-routes.post('/createMovie', [], '');
+routes.post("/createMovie", upload.single("file"), insertMovie);
 
-routes.put('/editMovie/:id', [], '');
+routes.put("/editMovie/:id", upload.single("file"), updateMovie);
 
-routes.delete('removeMovie', [], '');
+routes.delete("/removeFavorites", deleteMovieFromFavorites);
+
+routes.delete("/removeMovie", deleteMovie);
+
+module.exports = routes;

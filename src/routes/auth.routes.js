@@ -1,8 +1,9 @@
 
 const {Router} = require('express');
 const { loginUser, getUsers } = require('../controllers/auth.controllers');
+const { getAllUsers } = require('../models/users.models')
 const { check } = require('express-validator');
-const { validateInput } = require('../middleware/validateInput');
+const { validateInput} = require('../middleware/validateInput');
 
 
 const router = Router();
