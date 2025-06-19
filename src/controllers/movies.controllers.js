@@ -1,4 +1,5 @@
 const {
+  checkMovExists,
   getsearchMovieByTitle,
   addMovie,
   updtMovie,
@@ -34,9 +35,9 @@ const getMovieByTitle = async (req, res) => {
 };
 
 const getUserFavorites = async (req, res) => {
-  const { id } = req.body;
+  const { id_user } = req.body;
   try {
-    const movie = await getUserFavorites(id);
+    const movie = await getUserFavorites(id_user);
     if (!movie) {
       return res.status(404).json({
         ok: false,
@@ -103,6 +104,13 @@ const updateMovie = async (req, res) => {
   const { title, year_movie, director, genre_id, duration, synopsis } =
     req.body;
   try {
+    const exists = await checkMovExists(id);
+    if (exists.length <= 0) {
+      return res.status(404).json({
+        ok: false,
+        msg: "El id de la pelicula no existe",
+      });
+    }
     const movie = await updtMovie(
       id,
       title,
@@ -165,6 +173,13 @@ const deleteMovie = async (req, res) => {
   const { id } = req.body;
 
   try {
+    const exists = await checkMovExists(id);
+    if (exists.length <= 0) {
+      return res.status(404).json({
+        ok: false,
+        msg: "El id de la pelicula no existe",
+      });
+    }
     const movie = await delMovie(id);
     if (!movie) {
       return res.status(404).json({

@@ -2,6 +2,19 @@ const { users, movies } = require("../models/querys");
 const { bdConnect } = require("../utils/dbConnect");
 const pool = bdConnect();
 
+const checkMovExists = async (id_movie) => {
+  try {
+    const client = await pool.connect();
+
+    const answer = await client.query(movies.checkMovieExists, [id_movie]);
+
+    client.release();
+    return answer.rows;
+  } catch (error) {
+    throw error;
+  }
+};
+
 /**
  *
  * @param {*} title
@@ -30,9 +43,7 @@ const getUserFavorites = async (user) => {
     const client = await pool.connect();
 
     const answer = await client.query(movies.getUserFavorites, [user]);
-    console.log(answer);
 
-    console.log(answer);
     client.release();
     return answer.rows;
   } catch (error) {
@@ -74,9 +85,7 @@ const addMovie = async (
       duration,
       synopsis,
     ]);
-    console.log(answer);
 
-    console.log(answer);
     client.release();
     return answer.rows;
   } catch (error) {
@@ -121,7 +130,6 @@ const updtMovie = async (
       duration,
       synopsis,
     ]);
-    console.log(answer);
 
     client.release();
     return answer.rows;
@@ -161,9 +169,7 @@ const delMovieFromFavorites = async (movie_id, user_id) => {
       movie_id,
       user_id,
     ]);
-    console.log(answer);
 
-    console.log(answer);
     client.release();
     return answer.rows;
   } catch (error) {
@@ -172,6 +178,7 @@ const delMovieFromFavorites = async (movie_id, user_id) => {
 };
 
 module.exports = {
+  checkMovExists,
   getsearchMovieByTitle,
   getUserFavorites,
   addMovie,

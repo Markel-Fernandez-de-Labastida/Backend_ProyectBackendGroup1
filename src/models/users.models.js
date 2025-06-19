@@ -2,6 +2,32 @@ const { users, movies } = require("../models/querys");
 const { bdConnect } = require("../utils/dbConnect");
 const pool = bdConnect();
 
+const checkUsrExists = async (id) => {
+  try {
+    const client = await pool.connect();
+
+    const answer = await client.query(users.checkUserExists, [id]);
+
+    client.release();
+    return answer.rows[0];
+  } catch (error) {
+    return error;
+  }
+};
+
+const getUserRol = async (id) => {
+  try {
+    const client = await pool.connect();
+
+    const answer = await client.query(users.getUserRole, [id]);
+
+    client.release();
+    return answer.rows[0];
+  } catch (error) {
+    return error;
+  }
+};
+
 const getAllUsers = async () => {
   try {
     const client = await pool.connect();
@@ -26,9 +52,7 @@ const getUserByEmail = async (email) => {
     const client = await pool.connect();
 
     const answer = await client.query(users.getUserByEmail, [email]);
-    console.log(answer);
 
-    console.log(answer);
     client.release();
     return answer.rows[0];
   } catch (error) {
@@ -120,6 +144,8 @@ const addFavorite = async (id_user, id_movie) => {
 };
 
 module.exports = {
+  checkUsrExists,
+  getUserRol,
   getAllUsers,
   getUserByEmail,
   addFavorite,

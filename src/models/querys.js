@@ -1,4 +1,9 @@
 const users = {
+  checkUserExists: `select id_user from users where id_user = $1`,
+  getUserRole: `select roles.role_name 
+                    from users
+                    inner join roles on users.role_id = roles.id_role
+                    where users.id_user = $1`,
   getAllUsers: `select * from users`,
   getUserByEmail: `select * from users 
                     where email = $1`,
@@ -16,6 +21,8 @@ const users = {
 };
 
 const movies = {
+  checkMovieExists: `select id_movie from movie where id_movie = $1`,
+  //getMovieById: `select * from movie where id_movie = $1`,
   getsearchMovieByTitle: `select * from movie 
                             where title like '%' || $1 || '%'`,
   getUserFavorites: `select movie.title, users.name_user 
