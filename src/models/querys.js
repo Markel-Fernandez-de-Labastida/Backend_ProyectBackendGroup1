@@ -4,7 +4,6 @@ const users = {
     createUser: 'insert into users(name_user, email, password_hash, role_id) values($1, $2, $3, $4) RETURNING id_user, name_user, email, password_hash, role_id',
     updateUser: 'update users set name_user=($1), email=($2), password_hash=($3), role_id=($4) where id_user = $5 RETURNING name_user, email, password_hash, role_id',
     deleteUser: 'delete from users where id_user = $1 RETURNING name_user, email, password_hash, role_id',
-
 }
 
 const movies = {

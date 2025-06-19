@@ -3,8 +3,6 @@ const express = require('express');
 
 const cors = require('cors');
 
-/* const publicRoutes = require('./routes/public.routes');
-const adminRoutes = require('./routes/admin.routes')*/
 const authRoutes = require('./routes/auth.routes');
 
 
@@ -22,13 +20,10 @@ app.use(cors({
 }));
 
 
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
 app.use('/api/v1/auth', authRoutes);
-// app.use('/api/v1', publicRoutes);
-
-// app.use('/api/v1/admin', adminRoutes);
 
 // Poner la aplicación a la escucha del puerto
 app.listen(port, () => {

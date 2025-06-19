@@ -31,9 +31,9 @@ const loginUser = async (req, res) => {
         }
         const verifyPassword = bcrypt.compareSync(password, user.password_hash);
         if (!verifyPassword) {
-            return res.status(403).json({
+            return res.status(401).json({
                 ok: false,
-                msg: 'La contraseña no coincide.'
+                msg: 'Credenciales incorrectas.'
             })
         }
         // CREAR TOKEN
@@ -47,7 +47,8 @@ const loginUser = async (req, res) => {
         await createToken(user.id, role)
             .then((resp) => token = resp)
             .catch((error) => {
-                return res.status(403).json({
+                console.log(error)
+                return res.status(401).json({
                     ok: false,
                     msg: error
                 })
@@ -105,7 +106,7 @@ const signUpUser = async (req, res) => {
         await createToken(savedUser[0].id_user, role)
             .then((resp) => token = resp)
             .catch((error) => {
-                return res.status(403).json({
+                return res.status(401).json({
                     ok: false,
                     msg: error
                 })
@@ -125,6 +126,12 @@ const signUpUser = async (req, res) => {
 
 }
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 
 const renewToken = async (req, res) => {
     const uid = req.uid;
@@ -134,7 +141,7 @@ const renewToken = async (req, res) => {
     await createToken(uid, role)
         .then((resp) => newToken = resp)
         .catch((error) => {
-            return res.status(403).json({
+            return res.status(401).json({
                 ok: false,
                 msg: error
             })
@@ -144,6 +151,8 @@ const renewToken = async (req, res) => {
         newToken
     })
 }
+
+
 
 module.exports = {
     loginUser,
