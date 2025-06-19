@@ -10,7 +10,7 @@ const {
 } = require('../models/users.models');
 
 const { createToken } = require('../utils/createToken');
-//importar conexión con bd pool
+
 // LOGIN
 
 /**
@@ -96,9 +96,7 @@ const signUpUser = async (req, res) => {
 
         // DETERMINAR ROL SEGÚN SU ROLE_ID
         let role;
-        if (role_id === 1) {
-            role = 'admin';
-        } else if (role_id === 2) {
+        if (role_id === 2) {
             role = 'user';
         }
         // crear token
