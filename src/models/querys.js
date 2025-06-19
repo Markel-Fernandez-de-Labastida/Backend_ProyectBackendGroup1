@@ -17,7 +17,8 @@ const users = {
                 where id_user = $1 RETURNING name_user, email, password_hash, role_id`,
   addFavorite: `insert into 
                 favorites(user_id, movie_id) 
-                values($1, $2)`,
+                values($1, $2)
+                RETURNING user_id, movie_id `,
 };
 
 const movies = {
@@ -29,15 +30,15 @@ const movies = {
                             from favorites 
                             inner join users on favorites.user_id = users.id_user 
                             inner join movie on favorites.movie_id = movie.id_movie 
-                            where users.name_user like %$1%`,
+                            where users.id_user = $1 `,
   insertMovie: `insert into 
                             movie(title, image_url, image_name, year_movie, director, genre_id, duration, synopsis) 
                             values ($1, $2, $3, $4, $5, $6, $7, $8) 
                             RETURNING title, image_url, image_name, year_movie, director, genre_id, duration, synopsis`,
   updateMovie: `update movie 
                             set title=($2), image_url=($3), image_name=($4), year_movie=($5), director=($6), genre_id=($7), duration=($8), synopsis=($9) 
-                            where id_movie = $1`,
-  //RETURNING title, image_url, image_name, year_movie, director, genre_id, duration, synopsis`,
+                            where id_movie = $1 
+                            RETURNING title, image_url, image_name, year_movie, director, genre_id, duration, synopsis`,
   deleteMovieFromFavorites: `delete from favorites 
                             where movie_id = $1 and user_id = $2`,
   deleteMovie: `delete from movie 

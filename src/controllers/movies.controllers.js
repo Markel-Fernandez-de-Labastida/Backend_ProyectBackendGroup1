@@ -9,9 +9,16 @@ const {
 
 const getMovieByTitle = async (req, res) => {
   const { title } = req.body;
+  if (title === "") {
+    throw res.status(404).json({
+      ok: false,
+      msg: "No puedes dejar vacio el titulo",
+    });
+  }
   try {
     //await
     const movies = await getsearchMovieByTitle(title);
+
     console.log("pelis: ", movies);
     if (movies.length <= 0) {
       return res.status(404).json({
@@ -34,33 +41,8 @@ const getMovieByTitle = async (req, res) => {
   }
 };
 
-const getUserFavorites = async (req, res) => {
-  const { id_user } = req.body;
-  try {
-    const movie = await getUserFavorites(id_user);
-    if (!movie) {
-      return res.status(404).json({
-        ok: false,
-        msg: "Error al mostrar las peliculas favoritas del usuario",
-      });
-    } else {
-      return res.status(201).json({
-        ok: true,
-        msg: "Pelicula favoritas",
-        data: movie,
-      });
-    }
-  } catch (error) {
-    console.log({ error });
-    res.status(500).json({
-      ok: false,
-      msg: "Error. Contacte con el administrador",
-    });
-  }
-};
-
 const insertMovie = async (req, res) => {
-  //   console.log("file", req.file);
+  console.log("file", req);
   const { filename, originalname, mimetype, size, path } = req.file;
   const { title, year_movie, director, genre_id, duration, synopsis } =
     req.body;
@@ -203,7 +185,6 @@ const deleteMovie = async (req, res) => {
 
 module.exports = {
   getMovieByTitle,
-  getUserFavorites,
   insertMovie,
   updateMovie,
   deleteMovieFromFavorites,

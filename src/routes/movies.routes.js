@@ -1,7 +1,8 @@
 const { Router } = require("express");
+const { check } = require("express-validator");
+const { validateInput } = require("../middleware/validateInput");
 const {
   getMovieByTitle,
-  getUserFavorites,
   insertMovie,
   updateMovie,
   deleteMovieFromFavorites,
@@ -16,9 +17,18 @@ const routes = Router();
 
 routes.get("/search", getMovieByTitle);
 
-routes.get("/movies", getUserFavorites);
-
-routes.post("/createMovie", upload.single("file"), insertMovie);
+routes.post(
+  "/createMovie",
+  /*[
+    check("title", "Titulo vacio").notEmpty().isString(),
+    check("year_movie", "Año vacio").notEmpty().isString(),
+    check("director", "Director vacio").notEmpty().isString(),
+    check("genre_id", "Géreno vacio").notEmpty().isString(),
+    validateInput,
+  ],*/
+  upload.single("file"),
+  insertMovie
+);
 
 routes.put("/editMovie/:id", upload.single("file"), updateMovie);
 

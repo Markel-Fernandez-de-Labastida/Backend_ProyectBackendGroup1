@@ -1,17 +1,21 @@
 const { users, movies } = require("../models/querys");
 const { bdConnect } = require("../utils/dbConnect");
-const pool = bdConnect();
+//const pool = bdConnect();
+console.log("Mivies: ");
 
 const checkMovExists = async (id_movie) => {
+  let client;
   try {
-    const client = await pool.connect();
+    const pool = bdConnect();
+    client = await pool.connect();
 
     const answer = await client.query(movies.checkMovieExists, [id_movie]);
 
-    client.release();
     return answer.rows;
   } catch (error) {
     throw error;
+  } finally {
+    client.release();
   }
 };
 
@@ -21,33 +25,18 @@ const checkMovExists = async (id_movie) => {
  * @returns
  */
 const getsearchMovieByTitle = async (title) => {
+  let client;
   try {
-    const client = await pool.connect();
+    const pool = bdConnect();
+    client = await pool.connect();
 
     const answer = await client.query(movies.getsearchMovieByTitle, [title]);
 
-    client.release();
     return answer.rows;
   } catch (error) {
     throw error;
-  }
-};
-
-/**
- *
- * @param {*} user
- * @returns
- */
-const getUserFavorites = async (user) => {
-  try {
-    const client = await pool.connect();
-
-    const answer = await client.query(movies.getUserFavorites, [user]);
-
+  } finally {
     client.release();
-    return answer.rows;
-  } catch (error) {
-    throw error;
   }
 };
 
@@ -72,8 +61,10 @@ const addMovie = async (
   duration,
   synopsis
 ) => {
+  let client;
   try {
-    const client = await pool.connect();
+    const pool = bdConnect();
+    client = await pool.connect();
 
     const answer = await client.query(movies.insertMovie, [
       title,
@@ -86,10 +77,11 @@ const addMovie = async (
       synopsis,
     ]);
 
-    client.release();
     return answer.rows;
   } catch (error) {
     throw error;
+  } finally {
+    client.release();
   }
 };
 
@@ -116,8 +108,10 @@ const updtMovie = async (
   duration,
   synopsis
 ) => {
+  let client;
   try {
-    const client = await pool.connect();
+    const pool = bdConnect();
+    client = await pool.connect();
 
     const answer = await client.query(movies.updateMovie, [
       id_movie,
@@ -131,10 +125,11 @@ const updtMovie = async (
       synopsis,
     ]);
 
-    client.release();
     return answer.rows;
   } catch (error) {
     throw error;
+  } finally {
+    client.release();
   }
 };
 
@@ -144,15 +139,19 @@ const updtMovie = async (
  * @returns
  */
 const delMovie = async (id) => {
+  let client;
   try {
-    const client = await pool.connect();
+    const pool = bdConnect();
+    client = await pool.connect();
 
     const answer = await client.query(movies.deleteMovie, [id]);
     //console.log(answer);
-    client.release();
+
     return answer.rows;
   } catch (error) {
     throw error;
+  } finally {
+    client.release();
   }
 };
 
@@ -162,25 +161,27 @@ const delMovie = async (id) => {
  * @returns
  */
 const delMovieFromFavorites = async (movie_id, user_id) => {
+  let client;
   try {
-    const client = await pool.connect();
+    const pool = bdConnect();
+    client = await pool.connect();
 
     const answer = await client.query(movies.deleteMovieFromFavorites, [
       movie_id,
       user_id,
     ]);
 
-    client.release();
     return answer.rows;
   } catch (error) {
     throw error;
+  } finally {
+    client.release();
   }
 };
 
 module.exports = {
   checkMovExists,
   getsearchMovieByTitle,
-  getUserFavorites,
   addMovie,
   updtMovie,
   delMovieFromFavorites,

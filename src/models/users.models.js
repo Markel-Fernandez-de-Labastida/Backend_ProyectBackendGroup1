@@ -1,44 +1,75 @@
 const { users, movies } = require("../models/querys");
 const { bdConnect } = require("../utils/dbConnect");
-const pool = bdConnect();
+/* const pool = bdConnect(); */
+console.log("Users: ");
 
 const checkUsrExists = async (id) => {
+  let client;
   try {
-    const client = await pool.connect();
+    const pool = bdConnect();
+    client = await pool.connect();
 
     const answer = await client.query(users.checkUserExists, [id]);
 
-    client.release();
     return answer.rows[0];
   } catch (error) {
-    return error;
+    throw error;
+  } finally {
+    client.release();
   }
 };
 
 const getUserRol = async (id) => {
+  let client;
   try {
-    const client = await pool.connect();
+    const pool = bdConnect();
+    client = await pool.connect();
 
     const answer = await client.query(users.getUserRole, [id]);
 
-    client.release();
     return answer.rows[0];
   } catch (error) {
-    return error;
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+/**
+ *
+ * @param {*} user
+ * @returns
+ */
+const getAllFavorites = async (user) => {
+  let client;
+  try {
+    const pool = bdConnect();
+    client = await pool.connect();
+
+    const answer = await client.query(movies.getUserFavorites, [user]);
+
+    return answer.rows;
+  } catch (error) {
+    throw error;
+  } finally {
+    client.release();
   }
 };
 
 const getAllUsers = async () => {
+  let client;
   try {
+    const pool = bdConnect();
     const client = await pool.connect();
     //console.log("client:", client);
     const answer = await client.query(users.getAllUsers);
-    //console.log(answer);
-    client.release();
+
     return answer.rows;
   } catch (error) {
     console.log("error modelo", error);
     throw error;
+  } finally {
+    client.release();
   }
 };
 
@@ -48,15 +79,18 @@ const getAllUsers = async () => {
  * @returns
  */
 const getUserByEmail = async (email) => {
+  let client;
   try {
-    const client = await pool.connect();
+    const pool = bdConnect();
+    client = await pool.connect();
 
     const answer = await client.query(users.getUserByEmail, [email]);
 
-    client.release();
     return answer.rows[0];
   } catch (error) {
-    return error;
+    throw error;
+  } finally {
+    client.release();
   }
 };
 
@@ -69,8 +103,10 @@ const getUserByEmail = async (email) => {
  * @returns
  */
 const insertUser = async (name_user, email, password_hash, role_id) => {
+  let client;
   try {
-    const client = await pool.connect();
+    const pool = bdConnect();
+    client = await pool.connect();
 
     const answer = await client.query(users.createUser, [
       name_user,
@@ -78,13 +114,12 @@ const insertUser = async (name_user, email, password_hash, role_id) => {
       password_hash,
       role_id,
     ]);
-    console.log(answer);
 
-    console.log(answer);
-    client.release();
     return answer.rows;
   } catch (error) {
-    return error;
+    throw error;
+  } finally {
+    client.release();
   }
 };
 
@@ -95,17 +130,18 @@ const insertUser = async (name_user, email, password_hash, role_id) => {
  * @returns
  */
 const updtUser = async (name, id) => {
+  let client;
   try {
-    const client = await pool.connect();
+    const pool = bdConnect();
+    client = await pool.connect();
 
     const answer = await client.query(users.updateUser, [name, id]);
-    console.log(answer);
 
-    console.log(answer);
-    client.release();
     return answer.rows;
   } catch (error) {
-    return error;
+    throw error;
+  } finally {
+    client.release();
   }
 };
 
@@ -115,31 +151,34 @@ const updtUser = async (name, id) => {
  * @returns
  */
 const delUser = async (id) => {
+  let client;
   try {
+    const pool = bdConnect();
     const client = await pool.connect();
 
     const answer = await client.query(users.deleteUser, [id]);
-    console.log(answer);
 
-    console.log(answer);
-    client.release();
     return answer.rows;
   } catch (error) {
-    return error;
+    throw error;
+  } finally {
+    client.release();
   }
 };
 
 const addFavorite = async (id_user, id_movie) => {
+  let client;
   try {
-    const client = await pool.connect();
+    const pool = bdConnect();
+    client = await pool.connect();
 
     const answer = await client.query(users.addFavorite, [id_user, id_movie]);
-    console.log(answer);
 
-    client.release();
     return answer.rows;
   } catch (error) {
-    return error;
+    throw error;
+  } finally {
+    client.release();
   }
 };
 
@@ -147,6 +186,7 @@ module.exports = {
   checkUsrExists,
   getUserRol,
   getAllUsers,
+  getAllFavorites,
   getUserByEmail,
   addFavorite,
   insertUser,
