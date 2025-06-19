@@ -1,31 +1,30 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 const validateJWT = (req, res, next) => {
-    const header = req.header.authorization;
-    if (!header) {
-        return res.status(401).json({
-            msg: 'No hay informacion de autenticación'
-        })
+  const header = req.header.authorization;
+  if (!header) {
+    return res.status(401).json({
+      msg: "No hay informacion de autenticación",
+    });
+  }
+  const parts = header.split(" ");
+  if (parts.length !== 2 || parts[0] !== "Bearer") {
+    return res.status(401).json({
+      msg: "Formato de token invalido",
+    });
+  }
+  const token = parts[1];
+  jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
+    if (error) {
+      return res.status(403).json({ msg: "Token no válido" });
     }
-    const parts = header.split(' ');
-    if (parts.length !== 2 || parts[0] !== 'Bearer') {
-        return res.status(401).json({
-            msg: 'Formato de token invalido'
-        })
-    }
-    const token = parts[1];
-    jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
-        if (error) {
-            return res.status(403).json({ msg: 'Token no válido' });
-        }
-        req.user = decoded;
-        req.user.uid = decoded.id;
-        req.user.role = decoded.rol;
-        next();
-    })
-}
+    req.user = decoded;
+    req.user.uid = decoded.id;
+    req.user.role = decoded.rol;
+    next();
+  });
+};
 
 module.exports = {
-    validateJWT
-}
-
+  validateJWT,
+};
