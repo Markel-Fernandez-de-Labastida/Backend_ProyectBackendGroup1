@@ -18,6 +18,22 @@ const checkMovExists = async (id_movie) => {
   }
 };
 
+const getsearchMovieById = async (id) => {
+  let client;
+  try {
+    const pool = bdConnect();
+    client = await pool.connect();
+
+    const answer = await client.query(movies.getsearchMovieById, [id]);
+
+    return answer.rows[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
 /**
  *
  * @param {*} title
@@ -186,6 +202,7 @@ const delMovieFromFavorites = async (movie_id, user_id) => {
 
 module.exports = {
   checkMovExists,
+  getsearchMovieById,
   getsearchMovieByTitle,
   addMovie,
   updtMovie,

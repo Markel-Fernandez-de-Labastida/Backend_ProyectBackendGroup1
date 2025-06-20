@@ -16,6 +16,7 @@ const bdConnect = () => {
   } catch (error) {
     console.log(error);
     throw "Error. Contacte con el administrador";
+  } finally {
   }
 };
 
