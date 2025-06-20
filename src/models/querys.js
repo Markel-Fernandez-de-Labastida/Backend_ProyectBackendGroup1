@@ -26,6 +26,8 @@ const movies = {
   //getMovieById: `select * from movie where id_movie = $1`,
   getsearchMovieByTitle: `select * from movie 
                             where title like '%' || $1 || '%'`,
+  getsearchMovieById: `select * from movie 
+                            where id_movie = $1`,
   getUserFavorites: `select movie.title, users.name_user 
                             from favorites 
                             inner join users on favorites.user_id = users.id_user 

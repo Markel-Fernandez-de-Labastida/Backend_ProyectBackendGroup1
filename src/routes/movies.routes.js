@@ -2,6 +2,7 @@ const { Router } = require("express");
 const { check } = require("express-validator");
 const { validateInput } = require("../middleware/validateInput");
 const {
+  getMovieById,
   getMovieByTitle,
   insertMovie,
   updateMovie,
@@ -10,11 +11,13 @@ const {
 } = require("../controllers/movies.controllers");
 
 const upload = require("../utils/multer");
+const { getsearchMovieById } = require("../models/movies.models");
 
 const routes = Router();
 
 //routes.get('/search/:title',[] , '');
 
+routes.get("/searchId", getMovieById);
 routes.get("/search", getMovieByTitle);
 
 routes.post(

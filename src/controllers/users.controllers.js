@@ -87,7 +87,7 @@ const addFavourite = async (req, res) => {
       });
     }
     const existMovie = await checkMovExists(id_movie);
-    console.log("PELI: ", existMovie);
+    //console.log("PELI: ", existMovie);
     if (existMovie.length <= 0) {
       return res.status(404).json({
         ok: false,

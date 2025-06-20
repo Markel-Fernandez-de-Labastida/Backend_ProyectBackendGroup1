@@ -1,11 +1,46 @@
 const {
   checkMovExists,
+  getsearchMovieById,
   getsearchMovieByTitle,
   addMovie,
   updtMovie,
   delMovieFromFavorites,
   delMovie,
 } = require("../models/movies.models");
+
+const getMovieById = async (req, res) => {
+  const { id_movie } = req.body;
+  if (id_movie === "") {
+    throw res.status(404).json({
+      ok: false,
+      msg: "No puedes dejar vacio el id",
+    });
+  }
+  try {
+    //await
+    const movies = await getsearchMovieById(id_movie);
+
+    //console.log("pelis: ", movies);
+    if (movies.length <= 0) {
+      return res.status(404).json({
+        ok: false,
+        msg: "La pelicula no existe",
+      });
+    } else {
+      return res.status(200).json({
+        ok: true,
+        msg: "Pelicula encontrada",
+        data: movies,
+      });
+    }
+  } catch (error) {
+    console.log({ error });
+    res.status(500).json({
+      ok: false,
+      msg: "Error. Contacte con el administrador",
+    });
+  }
+};
 
 const getMovieByTitle = async (req, res) => {
   const { title } = req.body;
@@ -28,7 +63,7 @@ const getMovieByTitle = async (req, res) => {
     } else {
       return res.status(200).json({
         ok: true,
-        msg: "entra en getMovieByTitle",
+        msg: "Pelicula encontrada",
         data: movies,
       });
     }
@@ -184,6 +219,7 @@ const deleteMovie = async (req, res) => {
 };
 
 module.exports = {
+  getMovieById,
   getMovieByTitle,
   insertMovie,
   updateMovie,
