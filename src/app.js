@@ -1,14 +1,13 @@
+const express = require("express");
 
-const express = require('express');
-
-const cors = require('cors');
+const cors = require("cors");
 
 const authRoutes = require('./routes/auth.routes');
+const userRoutes = require("./routes/users.routes");
+const movieRoutes = require("./routes/movies.routes");
+//console.log("Fin de requerimientos");
 
-
-//const {connection} = require('./utils/dbconnect')
-
-require('dotenv').config();
+require("dotenv").config();
 
 const port = process.env.PORT || 3000;
 
@@ -19,14 +18,17 @@ app.use(cors({
     origin: whiteList
 }));
 
-
-app.use(express.urlencoded({extended: false}));
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use("/file", express.static(__dirname + "/public/uploads")); // Servir archivos
+
 
 app.use('/api/v1/auth', authRoutes);
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/movies", movieRoutes);
+
 
 // Poner la aplicación a la escucha del puerto
 app.listen(port, () => {
-    console.log(`Server on port ${port}`);
-})
-
+  console.log(`Server on port ${port}`);
+});

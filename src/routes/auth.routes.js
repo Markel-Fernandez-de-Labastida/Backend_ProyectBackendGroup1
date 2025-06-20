@@ -1,4 +1,3 @@
-
 const {Router} = require('express');
 const { loginUser, signUpUser, renewToken} = require('../controllers/auth.controllers');
 const { check } = require('express-validator');
