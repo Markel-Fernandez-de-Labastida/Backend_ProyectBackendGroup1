@@ -8,9 +8,6 @@ const verifyRole = (requiredRole) => {
                 message: 'Información de usuario no disponible'
             });
         }
-
-        console.log('Rol del usuario:', req.user.role);
-        
         if (req.user.role !== requiredRole) {
             return res.status(403).json({
                 message: 'Acceso no autorizado para este rol'

@@ -1,7 +1,6 @@
+
 const { users, movies } = require("../models/querys");
 const { bdConnect } = require("../utils/dbConnect");
-/* const pool = bdConnect(); */
-console.log("Users: ");
 
 const checkUsrExists = async (id) => {
   let client;
@@ -34,6 +33,7 @@ const getUserRol = async (id) => {
     client.release();
   }
 };
+
 
 /**
  *
@@ -123,12 +123,14 @@ const insertUser = async (name_user, email, password_hash, role_id) => {
   }
 };
 
+
 /**
  *
  * @param {*} name
  * @param {*} id
  * @returns
  */
+
 const updtUser = async (name, id) => {
   let client;
   try {
@@ -145,11 +147,13 @@ const updtUser = async (name, id) => {
   }
 };
 
+
 /**
  *
  * @param {*} id
  * @returns
  */
+
 const delUser = async (id) => {
   let client;
   try {

@@ -2,7 +2,6 @@ const { Pool } = require("pg");
 require("dotenv").config();
 
 const bdConnect = () => {
-  // console.log(process.env.POOL_HOST, process.env.POOL_USER, process.env.POOL_DATABASE, process.env.POOL_PASSWORD)
   try {
     const pool = new Pool({
       host: process.env.POOL_HOST,
@@ -19,6 +18,7 @@ const bdConnect = () => {
     throw "Error. Contacte con el administrador";
   }
 };
+
 
 module.exports = {
   bdConnect,

@@ -1,4 +1,5 @@
 const users = {
+
   checkUserExists: `select id_user from users where id_user = $1`,
   getUserRole: `select roles.role_name 
                     from users
