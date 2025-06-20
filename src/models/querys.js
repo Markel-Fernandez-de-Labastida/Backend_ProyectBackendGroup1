@@ -24,10 +24,13 @@ const users = {
 const movies = {
   checkMovieExists: `select id_movie from movie where id_movie = $1`,
   //getMovieById: `select * from movie where id_movie = $1`,
-  getAllMovies: `select * from movie`,
-  getsearchMovieByTitle: `select * from movie 
+  getAllMovies: `select movie.title, movie.image_url, movie.image_name, movie.year_movie, movie.director, genre.name_genre, movie.duration, movie.synopsis from movie 
+                            inner join genre on movie.genre_id = genre.id_genre`,
+  getsearchMovieByTitle: `select movie.title, movie.image_url, movie.image_name, movie.year_movie, movie.director, genre.name_genre, movie.duration, movie.synopsis from movie 
+                            inner join genre on movie.genre_id = genre.id_genre
                             where title like '%' || $1 || '%'`,
-  getsearchMovieById: `select * from movie 
+  getsearchMovieById: `select movie.title, movie.image_url, movie.image_name, movie.year_movie, movie.director, genre.name_genre, movie.duration, movie.synopsis from movie 
+                            inner join genre on movie.genre_id = genre.id_genre
                             where id_movie = $1`,
   getUserFavorites: `select movie.title, users.name_user 
                             from favorites 
