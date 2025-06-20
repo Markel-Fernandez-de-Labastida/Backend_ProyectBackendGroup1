@@ -105,12 +105,12 @@ const getMovieByTitle = async (req, res) => {
 };
 
 const insertMovie = async (req, res) => {
-  console.log("file", req);
+  //console.log("file", req);
+  console.log('BODY BACKEND', req.body);
+  
   const { filename, originalname, mimetype, size, path } = req.file;
-  const { title, year_movie, director, genre_id, duration, synopsis } =
-    req.body;
-  //   console.log(req.body);
-
+  const { title, year_movie, director, genre_id, duration, synopsis } = req.body;
+  
   const newFilm = {};
   try {
     const movie = await addMovie(
