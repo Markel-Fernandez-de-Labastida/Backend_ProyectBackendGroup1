@@ -2,6 +2,22 @@ const { users, movies } = require("../models/querys");
 const { bdConnect } = require("../utils/dbConnect");
 //const pool = bdConnect();
 
+const getAllMovie = async () => {
+  let client;
+  try {
+    const pool = bdConnect();
+    client = await pool.connect();
+
+    const answer = await client.query(movies.getAllMovies);
+
+    return answer.rows;
+  } catch (error) {
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
 const checkMovExists = async (id_movie) => {
   let client;
   try {
@@ -173,7 +189,6 @@ const delMovie = async (id) => {
   }
 };
 
-
 /**
  *
  * @param {*} id
@@ -199,8 +214,8 @@ const delMovieFromFavorites = async (movie_id, user_id) => {
   }
 };
 
-
 module.exports = {
+  getAllMovie,
   checkMovExists,
   getsearchMovieById,
   getsearchMovieByTitle,

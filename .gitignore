@@ -4,4 +4,4 @@ node_modules
 
 .DS_Store
 
-src/public/uploads/
+public/uploads/

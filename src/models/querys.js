@@ -1,5 +1,4 @@
 const users = {
-
   checkUserExists: `select id_user from users where id_user = $1`,
   getUserRole: `select roles.role_name 
                     from users
@@ -25,6 +24,7 @@ const users = {
 const movies = {
   checkMovieExists: `select id_movie from movie where id_movie = $1`,
   //getMovieById: `select * from movie where id_movie = $1`,
+  getAllMovies: `select * from movie`,
   getsearchMovieByTitle: `select * from movie 
                             where title like '%' || $1 || '%'`,
   getsearchMovieById: `select * from movie 
