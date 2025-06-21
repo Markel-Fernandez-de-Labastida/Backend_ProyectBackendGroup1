@@ -20,7 +20,7 @@ const routes = Router();
 
 routes.get("/getAllMovies", getAllMovies);
 routes.post("/searchId", getMovieById);
-routes.get("/search", getMovieByTitle);
+routes.post("/search", getMovieByTitle);
 
 routes.post(
   "/createMovie",

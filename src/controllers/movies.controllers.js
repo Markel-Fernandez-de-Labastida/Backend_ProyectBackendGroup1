@@ -49,7 +49,7 @@ const getMovieById = async (req, res) => {
     const movies = await getsearchMovieById(id_movie);
 
     //console.log("pelis: ", movies);
-    if (movies.length <= 0) {
+    if (!movies || movies.length <= 0) {
       return res.status(404).json({
         ok: false,
         msg: "La pelicula no existe",

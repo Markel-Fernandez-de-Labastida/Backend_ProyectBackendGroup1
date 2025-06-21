@@ -26,7 +26,7 @@ const movies = {
   //getMovieById: `select * from movie where id_movie = $1`,
   getAllMovies: `select movie.id_movie, movie.title, movie.image_url, movie.image_name, movie.year_movie, movie.director, genre.name_genre, movie.duration, movie.synopsis from movie 
                             inner join genre on movie.genre_id = genre.id_genre`,
-  getsearchMovieByTitle: `select movie.title, movie.image_url, movie.image_name, movie.year_movie, movie.director, genre.name_genre, movie.duration, movie.synopsis from movie 
+  getsearchMovieByTitle: `select movie.id_movie, movie.title, movie.image_url, movie.image_name, movie.year_movie, movie.director, genre.name_genre, movie.duration, movie.synopsis from movie 
                             inner join genre on movie.genre_id = genre.id_genre
                             where title like '%' || $1 || '%'`,
   getsearchMovieById: `select movie.id_movie, movie.title, movie.image_url, movie.image_name, movie.year_movie, movie.director, genre.name_genre, movie.duration, movie.synopsis from movie 
