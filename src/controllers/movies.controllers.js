@@ -229,7 +229,7 @@ const deleteMovie = async (req, res) => {
     if (!movie) {
       return res.status(404).json({
         ok: false,
-        msg: "Error al elimina pelicula",
+        msg: "Error al eliminar pelicula",
       });
     } else {
       return res.status(200).json({
