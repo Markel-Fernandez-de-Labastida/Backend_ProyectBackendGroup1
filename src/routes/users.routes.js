@@ -1,3 +1,6 @@
+/**
+ * Importaciones
+ */
 const { Router } = require("express");
 const {
   addFavourite,
@@ -7,6 +10,9 @@ const {
 
 const routes = Router();
 
+/**
+ * Rutas usuario
+ */
 routes.post("/addFavorite", addFavourite);
 routes.get("/getRole", getUserRole);
 routes.get("/movies", getUserFavorites);

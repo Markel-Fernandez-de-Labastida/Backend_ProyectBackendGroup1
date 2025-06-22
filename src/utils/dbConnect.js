@@ -1,6 +1,10 @@
 const { Pool } = require("pg");
 require("dotenv").config();
 
+/**
+ * Función para realizar la conexión a la base de datos.
+ * @returns Devuelve un objeto Pool, un conjunto de conexiones.
+ */
 const bdConnect = () => {
   try {
     const pool = new Pool({
@@ -8,10 +12,8 @@ const bdConnect = () => {
       user: process.env.POOL_USER,
       database: process.env.POOL_DATABASE,
       password: process.env.POOL_PASSWORD,
-      //port: process.env.POOL_PORT
     });
     console.log("Conectado a BD");
-    //console.log({pool})
     return pool;
   } catch (error) {
     console.log(error);

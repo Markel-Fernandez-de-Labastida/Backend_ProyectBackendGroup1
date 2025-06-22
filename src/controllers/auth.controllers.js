@@ -15,9 +15,9 @@ const { createToken } = require('../utils/createToken');
 
 /**
  * Función para iniciar la sesión del usuario.
- * @param {*} req 
- * @param {*} res 
- * @returns 
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Si el usuario existe, comprueba que la contraseña coincide y devuelve un token para la sesión.
  */
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
@@ -36,7 +36,6 @@ const loginUser = async (req, res) => {
                 msg: 'Credenciales incorrectas.'
             })
         }
-        // CREAR TOKEN
         let role;
         if (user.role_id === 1) {
             role = 'admin';
@@ -70,9 +69,9 @@ const loginUser = async (req, res) => {
 
 /**
  * Función para registrar al usuario.
- * @param {*} req 
- * @param {*} res 
- * @returns Devuelve el objeto con el usuario registrado y el token de la sesión
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Si el usuario no existe, lo guarda y devuelve un objeto con el usuario registrado y el token de la sesión.
  */
 const signUpUser = async (req, res) => {
     const { name, email, password } = req.body;
@@ -84,22 +83,15 @@ const signUpUser = async (req, res) => {
                 ok: false,
                 msg: 'El usuario ya existe.'
             })
-            // redirigir al login
         }
-        // encriptar contraseña
         const salt = bcrypt.genSaltSync(10);
         const encryptedPassword = bcrypt.hashSync(password, salt);
         let role_id;
-        // añadir a la bbdd
         const savedUser = await insertUser(name, email, encryptedPassword, role_id = 2);
-        //console.log('SAVED USER', savedUser);
-
-        // DETERMINAR ROL SEGÚN SU ROLE_ID
         let role;
         if (role_id === 2) {
             role = 'user';
         }
-        // crear token
         let token;
         await createToken(savedUser[0].id_user, role)
             .then((resp) => token = resp)
@@ -125,10 +117,10 @@ const signUpUser = async (req, res) => {
 }
 
 /**
- * 
- * @param {*} req 
- * @param {*} res 
- * @returns 
+ * Función para renovar el token en cada entrada a una ruta protegida
+ * @param {Object} req Requerimiento
+ * @param {Object} res Respuesta
+ * @returns Devuelve un nuevo token.
  */
 
 const renewToken = async (req, res) => {

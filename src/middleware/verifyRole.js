@@ -1,8 +1,11 @@
 
-
+/**
+ * Función para verificar el rol del usuario
+ * @param {String} requiredRole Rol del usuario
+ * @returns Ejecuta la siguiente función si el rol tiene acceso autorizado
+ */
 const verifyRole = (requiredRole) => {
     return (req, res, next) => {
-        // Asumiendo que el middleware validateJWT ya puso el usuario en req.user
         if (!req.user || !req.user.role) {
             return res.status(403).json({
                 message: 'Información de usuario no disponible'
@@ -13,7 +16,7 @@ const verifyRole = (requiredRole) => {
                 message: 'Acceso no autorizado para este rol'
             });
         }
-        next(); // Continuar si el rol es correcto
+        next();
     };
 };
 

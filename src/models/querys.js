@@ -15,7 +15,7 @@ const users = {
                 where id_user = $5 RETURNING name_user, email, password_hash, role_id`,
   deleteUser: `delete from users 
                 where id_user = $1 RETURNING name_user, email, password_hash, role_id`,
-  addFavorite: `insert into 
+  addFavoriteMovie: `insert into 
                 favorites(user_id, movie_id) 
                 values($1, $2)
                 RETURNING user_id, movie_id `,
@@ -50,11 +50,6 @@ const movies = {
   deleteMovie: `delete from movie 
                             where id_movie = $1 
                             RETURNING title, image_url, year_movie, director, genre_id, duration, synopsis`,
-
-  // Crear pelicula
-  // modificar pelicula
-  // cascade en delete pelicula
-  // returned en las querys para recibir el resultado
 };
 
 module.exports = {

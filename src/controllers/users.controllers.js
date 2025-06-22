@@ -6,10 +6,15 @@ const {
   checkUsrExists,
 } = require("../models/users.models");
 
+/**
+ * Función para obtener el rol del usuario.
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Devuelve un objeto con el rol del usuario.
+ */
 const getUserRole = async (req, res) => {
   const { id_user } = req.body;
   try {
-    //await
     const exists = await checkUsrExists(id_user);
     if (!exists) {
       return res.status(404).json({
@@ -18,7 +23,6 @@ const getUserRole = async (req, res) => {
       });
     }
     const role = await getUserRol(id_user);
-    console.log(role);
     if (!role) {
       return res.status(404).json({
         ok: false,
@@ -40,10 +44,14 @@ const getUserRole = async (req, res) => {
   }
 };
 
+/**
+ * Función para obtener las películas favoritas de un usuario.
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Devuelve un objeto con las películas marcadas como favoritas por un usuario.
+ */
 const getUserFavorites = async (req, res) => {
-  console.log("bodyFavorites: ", req.body);
   const { id_user } = req.body;
-  console.log("id_user: ", id_user);
   const exists = await checkUsrExists(id_user);
   if (!exists) {
     return res.status(404).json({
@@ -74,11 +82,15 @@ const getUserFavorites = async (req, res) => {
   }
 };
 
+/**
+ * Función para añadir una película a favoritos.
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Añade la película a favoritos en la base de datos.
+ */
 const addFavourite = async (req, res) => {
-  // preguntar como conseguir los dos ids (el del usuario y el de la pelicula)
   const { id_user, id_movie } = req.body;
   try {
-    //await
     const exists = await checkUsrExists(id_user);
     if (!exists) {
       return res.status(404).json({
@@ -87,7 +99,6 @@ const addFavourite = async (req, res) => {
       });
     }
     const existMovie = await checkMovExists(id_movie);
-    //console.log("PELI: ", existMovie);
     if (existMovie.length <= 0) {
       return res.status(404).json({
         ok: false,
@@ -95,7 +106,6 @@ const addFavourite = async (req, res) => {
       });
     }
     const user = await addFavorite(id_user, id_movie);
-    console.log(user);
     if (!user) {
       return res.status(404).json({
         ok: false,
@@ -117,4 +127,8 @@ const addFavourite = async (req, res) => {
   }
 };
 
-module.exports = { getUserRole, getUserFavorites, addFavourite };
+module.exports = {
+  getUserRole,
+  getUserFavorites,
+  addFavourite
+};

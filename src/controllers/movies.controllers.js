@@ -9,12 +9,15 @@ const {
   delMovie,
 } = require("../models/movies.models");
 
+/**
+ * Función que devuelve todas las películas.
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Devuelve un objeto con todas las películas y sus datos.
+ */
 const getAllMovies = async (req, res) => {
   try {
-    //await
     const movies = await getAllMovie();
-
-    //console.log("pelis: ", movies);
     if (movies.length <= 0) {
       return res.status(404).json({
         ok: false,
@@ -36,6 +39,12 @@ const getAllMovies = async (req, res) => {
   }
 };
 
+/**
+ * Función que devuelve una película según su id.
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Devuelve un objeto con la película según su id
+ */
 const getMovieById = async (req, res) => {
   const { id_movie } = req.body;
   if (id_movie === "") {
@@ -45,10 +54,7 @@ const getMovieById = async (req, res) => {
     });
   }
   try {
-    //await
     const movies = await getsearchMovieById(id_movie);
-
-    //console.log("pelis: ", movies);
     if (!movies || movies.length <= 0) {
       return res.status(404).json({
         ok: false,
@@ -70,6 +76,12 @@ const getMovieById = async (req, res) => {
   }
 };
 
+/**
+ * Función que devuelve películas según su título.
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Devuelve un objeto con las películas que coincidan con una palabra clave.
+ */
 const getMovieByTitle = async (req, res) => {
   const { title } = req.body;
   if (title === "") {
@@ -79,10 +91,7 @@ const getMovieByTitle = async (req, res) => {
     });
   }
   try {
-    //await
     const movies = await getsearchMovieByTitle(title);
-
-    console.log("pelis: ", movies);
     if (movies.length <= 0) {
       return res.status(404).json({
         ok: false,
@@ -104,14 +113,15 @@ const getMovieByTitle = async (req, res) => {
   }
 };
 
+/**
+ * Función para crear una película
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Guarda la película creada en la base de datos.
+ */
 const insertMovie = async (req, res) => {
-  //console.log("file", req);
-  console.log('BODY BACKEND', req.body);
-  
   const { filename, originalname, mimetype, size, path } = req.file;
   const { title, year_movie, director, genre_id, duration, synopsis } = req.body;
-  
-  const newFilm = {};
   try {
     const movie = await addMovie(
       title,
@@ -143,11 +153,16 @@ const insertMovie = async (req, res) => {
   }
 };
 
+/**
+ * Función para editar una película.
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Actuliza la película con los nuevos valores en la base de datos.
+ */
 const updateMovie = async (req, res) => {
   const { id } = req.params;
   const { filename, originalname, mimetype, size, path } = req.file;
-  const { title, year_movie, director, genre_id, duration, synopsis } =
-    req.body;
+  const { title, year_movie, director, genre_id, duration, synopsis } = req.body;
   try {
     const exists = await checkMovExists(id);
     if (exists.length <= 0) {
@@ -167,7 +182,6 @@ const updateMovie = async (req, res) => {
       duration,
       synopsis
     );
-    console.log("peli: ", movie);
     if (!movie) {
       return res.status(404).json({
         ok: false,
@@ -189,6 +203,12 @@ const updateMovie = async (req, res) => {
   }
 };
 
+/**
+ * Función para eliminar películas de favoritos.
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Elimina la película de los favoritos del usuario en la base de datos.
+ */
 const deleteMovieFromFavorites = async (req, res) => {
   const { movie_id, user_id } = req.body;
   try {
@@ -213,10 +233,14 @@ const deleteMovieFromFavorites = async (req, res) => {
   }
 };
 
+/**
+ * Función para eiminar una película.
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Elimina una película de la base de datos.
+ */
 const deleteMovie = async (req, res) => {
-  console.log(req.body);
   const { id } = req.body;
-
   try {
     const exists = await checkMovExists(id);
     if (exists.length <= 0) {

@@ -1,3 +1,6 @@
+/**
+ * Importaciones
+ */
 const { Router } = require("express");
 const { check } = require("express-validator");
 const { validateInput } = require("../middleware/validateInput");
@@ -12,15 +15,17 @@ const {
 } = require("../controllers/movies.controllers");
 
 const upload = require("../utils/multer");
-const { getsearchMovieById } = require("../models/movies.models");
+const { validateJWT } = require("../middleware/verifyToken");
+const { verifyRole } = require("../middleware/verifyRole");
 
 const routes = Router();
 
-//routes.get('/search/:title',[] , '');
-
-routes.get("/getAllMovies", getAllMovies);
-routes.post("/searchId", getMovieById);
-routes.post("/search", getMovieByTitle);
+/**
+ * Rutas gestión de películas
+ */
+routes.get("/getAllMovies", /* [validateJWT, verifyRole('admin')], */ getAllMovies);
+routes.post("/searchId", /* validateJWT, */ getMovieById);
+routes.post("/search", /* [validateJWT, verifyRole('user')], */ getMovieByTitle);
 
 routes.post(
   "/createMovie",
@@ -30,15 +35,17 @@ routes.post(
     check("director", "Director vacio").notEmpty().isString(),
     check("genre_id", "Géreno vacio").notEmpty(),
     validateInput,
+    /* validateJWT,
+    verifyRole('admin') */
   ],
   upload.single("file"),
   insertMovie
 );
 
-routes.put("/editMovie/:id", upload.single("file"), updateMovie);
+routes.put("/editMovie/:id", upload.single("file"), /* [validateJWT, verifyRole('admin')], */ updateMovie);
 
-routes.delete("/removeFavorites", deleteMovieFromFavorites);
+routes.delete("/removeFavorites", /* [validateJWT, verifyRole('user')], */ deleteMovieFromFavorites);
 
-routes.delete("/removeMovie", deleteMovie);
+routes.delete("/removeMovie", /* [validateJWT, verifyRole('admin')], */ deleteMovie);
 
 module.exports = routes;
