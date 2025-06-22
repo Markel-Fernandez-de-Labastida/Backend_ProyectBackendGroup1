@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/movies.controllers.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/movies.controllers.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const {
+  getAllMovie,
+  checkMovExists,
+  getsearchMovieById,
+  getsearchMovieByTitle,
+  addMovie,
+  updtMovie,
+  delMovieFromFavorites,
+  delMovie,
+} = require("../models/movies.models");
+
+/**
+ * Función que devuelve todas las películas.
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Devuelve un objeto con todas las películas y sus datos.
+ */
+const getAllMovies = async (req, res) => {
+  try {
+    const movies = await getAllMovie();
+    if (movies.length &lt;= 0) {
+      return res.status(404).json({
+        ok: false,
+        msg: "No existe ninguna pelicula",
+      });
+    } else {
+      return res.status(200).json({
+        ok: true,
+        msg: "Peliculas encontradas",
+        data: movies,
+      });
+    }
+  } catch (error) {
+    console.log({ error });
+    res.status(500).json({
+      ok: false,
+      msg: "Error. Contacte con el administrador",
+    });
+  }
+};
+
+/**
+ * Función que devuelve una película según su id.
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Devuelve un objeto con la película según su id
+ */
+const getMovieById = async (req, res) => {
+  const { id_movie } = req.body;
+  if (id_movie === "") {
+    throw res.status(404).json({
+      ok: false,
+      msg: "No puedes dejar vacio el id",
+    });
+  }
+  try {
+    const movies = await getsearchMovieById(id_movie);
+    if (!movies || movies.length &lt;= 0) {
+      return res.status(404).json({
+        ok: false,
+        msg: "La pelicula no existe",
+      });
+    } else {
+      return res.status(200).json({
+        ok: true,
+        msg: "Pelicula encontrada",
+        data: movies,
+      });
+    }
+  } catch (error) {
+    console.log({ error });
+    res.status(500).json({
+      ok: false,
+      msg: "Error. Contacte con el administrador",
+    });
+  }
+};
+
+/**
+ * Función que devuelve películas según su título.
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Devuelve un objeto con las películas que coincidan con una palabra clave.
+ */
+const getMovieByTitle = async (req, res) => {
+  const { title } = req.body;
+  if (title === "") {
+    throw res.status(404).json({
+      ok: false,
+      msg: "No puedes dejar vacio el titulo",
+    });
+  }
+  try {
+    const movies = await getsearchMovieByTitle(title);
+    if (movies.length &lt;= 0) {
+      return res.status(404).json({
+        ok: false,
+        msg: "La pelicula no existe",
+      });
+    } else {
+      return res.status(200).json({
+        ok: true,
+        msg: "Pelicula encontrada",
+        data: movies,
+      });
+    }
+  } catch (error) {
+    console.log({ error });
+    res.status(500).json({
+      ok: false,
+      msg: "Error. Contacte con el administrador",
+    });
+  }
+};
+
+/**
+ * Función para crear una película
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Guarda la película creada en la base de datos.
+ */
+const insertMovie = async (req, res) => {
+  const { filename, originalname, mimetype, size, path } = req.file;
+  const { title, year_movie, director, genre_id, duration, synopsis } = req.body;
+  try {
+    const movie = await addMovie(
+      title,
+      path,
+      originalname,
+      year_movie,
+      director,
+      genre_id,
+      duration,
+      synopsis
+    );
+    if (!movie) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Error al insertar pelicula",
+      });
+    }
+    return res.status(201).json({
+      ok: true,
+      msg: "Pelicula insertda",
+      movie,
+    });
+  } catch (error) {
+    console.log({ error });
+    res.status(500).json({
+      ok: false,
+      msg: "Error. Contacte con el administrador",
+    });
+  }
+};
+
+/**
+ * Función para editar una película.
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Actuliza la película con los nuevos valores en la base de datos.
+ */
+const updateMovie = async (req, res) => {
+  const { id } = req.params;
+  const { filename, originalname, mimetype, size, path } = req.file;
+  const { title, year_movie, director, genre_id, duration, synopsis } = req.body;
+  try {
+    const exists = await checkMovExists(id);
+    if (exists.length &lt;= 0) {
+      return res.status(404).json({
+        ok: false,
+        msg: "El id de la pelicula no existe",
+      });
+    }
+    const movie = await updtMovie(
+      id,
+      title,
+      path,
+      originalname,
+      year_movie,
+      director,
+      genre_id,
+      duration,
+      synopsis
+    );
+    if (!movie) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Error al modificar pelicula",
+      });
+    } else {
+      return res.status(200).json({
+        ok: true,
+        msg: "Pelicula modificada",
+        movie,
+      });
+    }
+  } catch (error) {
+    console.log({ error });
+    res.status(500).json({
+      ok: false,
+      msg: "Error. Contacte con el administrador",
+    });
+  }
+};
+
+/**
+ * Función para eliminar películas de favoritos.
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Elimina la película de los favoritos del usuario en la base de datos.
+ */
+const deleteMovieFromFavorites = async (req, res) => {
+  const { movie_id, user_id } = req.body;
+  try {
+    const movie = await delMovieFromFavorites(movie_id, user_id);
+    if (!movie) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Error al elimina pelicula de los favoritos",
+      });
+    } else {
+      return res.status(200).json({
+        ok: true,
+        msg: "Pelicula eliminada de favoritos",
+      });
+    }
+  } catch (error) {
+    console.log({ error });
+    res.status(500).json({
+      ok: false,
+      msg: "Error. Contacte con el administrador",
+    });
+  }
+};
+
+/**
+ * Función para eiminar una película.
+ * @param {Object} req Requerimiento. Datos de la solicitud.
+ * @param {Object} res Respuesta
+ * @returns Elimina una película de la base de datos.
+ */
+const deleteMovie = async (req, res) => {
+  const { id } = req.body;
+  try {
+    const exists = await checkMovExists(id);
+    if (exists.length &lt;= 0) {
+      return res.status(404).json({
+        ok: false,
+        msg: "El id de la pelicula no existe",
+      });
+    }
+    const movie = await delMovie(id);
+    if (!movie) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Error al eliminar pelicula",
+      });
+    } else {
+      return res.status(200).json({
+        ok: true,
+        msg: "Pelicula eliminada",
+      });
+    }
+  } catch (error) {
+    console.log({ error });
+    res.status(500).json({
+      ok: false,
+      msg: "Error. Contacte con el administrador",
+    });
+  }
+};
+
+module.exports = {
+  getAllMovies,
+  getMovieById,
+  getMovieByTitle,
+  insertMovie,
+  updateMovie,
+  deleteMovieFromFavorites,
+  deleteMovie,
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addFavorite">addFavorite</a></li><li><a href="global.html#addFavourite">addFavourite</a></li><li><a href="global.html#addMovie">addMovie</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#bdConnect">bdConnect</a></li><li><a href="global.html#checkMovExists">checkMovExists</a></li><li><a href="global.html#checkUsrExists">checkUsrExists</a></li><li><a href="global.html#createToken">createToken</a></li><li><a href="global.html#delMovie">delMovie</a></li><li><a href="global.html#delMovieFromFavorites">delMovieFromFavorites</a></li><li><a href="global.html#delUser">delUser</a></li><li><a href="global.html#deleteMovie">deleteMovie</a></li><li><a href="global.html#deleteMovieFromFavorites">deleteMovieFromFavorites</a></li><li><a href="global.html#express">express</a></li><li><a href="global.html#getAllFavorites">getAllFavorites</a></li><li><a href="global.html#getAllMovie">getAllMovie</a></li><li><a href="global.html#getAllMovies">getAllMovies</a></li><li><a href="global.html#getAllUsers">getAllUsers</a></li><li><a href="global.html#getMovieById">getMovieById</a></li><li><a href="global.html#getMovieByTitle">getMovieByTitle</a></li><li><a href="global.html#getUserByEmail">getUserByEmail</a></li><li><a href="global.html#getUserFavorites">getUserFavorites</a></li><li><a href="global.html#getUserRol">getUserRol</a></li><li><a href="global.html#getUserRole">getUserRole</a></li><li><a href="global.html#getsearchMovieById">getsearchMovieById</a></li><li><a href="global.html#getsearchMovieByTitle">getsearchMovieByTitle</a></li><li><a href="global.html#insertMovie">insertMovie</a></li><li><a href="global.html#insertUser">insertUser</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#port">port</a></li><li><a href="global.html#renewToken">renewToken</a></li><li><a href="global.html#signUpUser">signUpUser</a></li><li><a href="global.html#storage">storage</a></li><li><a href="global.html#updateMovie">updateMovie</a></li><li><a href="global.html#updtMovie">updtMovie</a></li><li><a href="global.html#updtUser">updtUser</a></li><li><a href="global.html#validateInput">validateInput</a></li><li><a href="global.html#validateJWT">validateJWT</a></li><li><a href="global.html#verifyRole">verifyRole</a></li><li><a href="global.html#whiteList">whiteList</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Jun 22 2025 21:08:28 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: models/movies.models.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: models/movies.models.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const { users, movies } = require("../models/querys");
+const { bdConnect } = require("../utils/dbConnect");
+
+/**
+ * Función para obtener todas las películas de la base de datos.
+ * Realiza la conexión a la base de datos, ejecuta una consulta SQL, devuelve los datos y libera la conexión.
+ * @returns Devuelve un array con el resultado.
+ */
+const getAllMovie = async () => {
+  let client;
+  try {
+    const pool = bdConnect();
+    client = await pool.connect();
+
+    const answer = await client.query(movies.getAllMovies);
+
+    return answer.rows;
+  } catch (error) {
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+/**
+ * Función para verificar si una película existe según su id.
+ * Realiza la conexión a la base de datos, ejecuta una consulta SQL, devuelve los datos y libera la conexión.
+ * @param {Number} id id de la película.
+ * @returns Devuelve el id de la película en caso de existir.
+ */
+const checkMovExists = async (id_movie) => {
+  let client;
+  try {
+    const pool = bdConnect();
+    client = await pool.connect();
+
+    const answer = await client.query(movies.checkMovieExists, [id_movie]);
+
+    return answer.rows;
+  } catch (error) {
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+
+/**
+ * Función para obtener una película según su id.
+ * Realiza la conexión a la base de datos, ejecuta una consulta SQL, devuelve los datos y libera la conexión.
+ * @param {Number} id id de la película
+ * @returns Devuelve un array con el resultado.
+ */
+const getsearchMovieById = async (id) => {
+  let client;
+  try {
+    const pool = bdConnect();
+    client = await pool.connect();
+
+    const answer = await client.query(movies.getsearchMovieById, [id]);
+
+    return answer.rows[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+/**
+ * Función para obtener una película según su título.
+ * Realiza la conexión a la base de datos, ejecuta una consulta SQL, devuelve los datos y libera la conexión.
+ * @param {String} title título de la película
+ * @returns Devuelve un array con el resultado.
+ */
+const getsearchMovieByTitle = async (title) => {
+  let client;
+  try {
+    const pool = bdConnect();
+    client = await pool.connect();
+
+    const answer = await client.query(movies.getsearchMovieByTitle, [title]);
+
+    return answer.rows;
+  } catch (error) {
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+/**
+ * Función para añadir una película a la base de datos
+ * Realiza la conexión a la base de datos, ejecuta una consulta SQL y libera la conexión.
+ * @param {String} title título de la película
+ * @param {String} image_url url de la imagen
+ * @param {Number} year_movie año de estreno de la película
+ * @param {String} director nombre del director/a
+ * @param {Number} genre_id id del género
+ * @param {Stirng} duration duración de la película
+ * @param {String} synopsis Sinopsis
+ * @returns Inserta la película en la base de datos.
+ */
+
+const addMovie = async (
+  title,
+  image_url,
+  image_name,
+  year_movie,
+  director,
+  genre_id,
+  duration,
+  synopsis
+) => {
+  let client;
+  try {
+    const pool = bdConnect();
+    client = await pool.connect();
+
+    const answer = await client.query(movies.insertMovie, [
+      title,
+      image_url,
+      image_name,
+      year_movie,
+      director,
+      genre_id,
+      duration,
+      synopsis,
+    ]);
+
+    return answer.rows;
+  } catch (error) {
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+/**
+ * Función para editar una película
+ * Realiza la conexión a la base de datos, ejecuta una consulta SQL y libera la conexión.
+ * @param {String} title título de la película
+ * @param {String} image_url url de la imagen
+ * @param {Number} year_movie año de estreno de la película
+ * @param {String} director nombre del director/a
+ * @param {Number} genre_id id del género
+ * @param {Stirng} duration duración de la película
+ * @param {String} synopsis Sinopsis
+ * @param {Number} id id de la película
+ * @returns Edita la película de la base de datos
+ */
+
+const updtMovie = async (
+  id_movie,
+  title,
+  image_url,
+  image_name,
+  year_movie,
+  director,
+  genre_id,
+  duration,
+  synopsis
+) => {
+  let client;
+  try {
+    const pool = bdConnect();
+    client = await pool.connect();
+
+    const answer = await client.query(movies.updateMovie, [
+      id_movie,
+      title,
+      image_url,
+      image_name,
+      year_movie,
+      director,
+      genre_id,
+      duration,
+      synopsis,
+    ]);
+
+    return answer.rows;
+  } catch (error) {
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+/**
+ * Función para eliminar una película de la base de datos según su id.
+ * @param {Number} id id de la película
+ * @returns Elimina la película
+ */
+const delMovie = async (id) => {
+  let client;
+  try {
+    const pool = bdConnect();
+    client = await pool.connect();
+
+    const answer = await client.query(movies.deleteMovie, [id]);
+
+    return answer.rows;
+  } catch (error) {
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+/**
+ * Función para eliminar una película de favoritos en la base de datos.
+ * @param {Number} id id de la película
+ * @returns Elimina la película de favoritos.
+ */
+const delMovieFromFavorites = async (movie_id, user_id) => {
+  let client;
+  try {
+    const pool = bdConnect();
+    client = await pool.connect();
+
+    const answer = await client.query(movies.deleteMovieFromFavorites, [
+      movie_id,
+      user_id,
+    ]);
+
+    return answer.rows;
+  } catch (error) {
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+module.exports = {
+  getAllMovie,
+  checkMovExists,
+  getsearchMovieById,
+  getsearchMovieByTitle,
+  addMovie,
+  updtMovie,
+  delMovieFromFavorites,
+  delMovie,
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addFavorite">addFavorite</a></li><li><a href="global.html#addFavourite">addFavourite</a></li><li><a href="global.html#addMovie">addMovie</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#bdConnect">bdConnect</a></li><li><a href="global.html#checkMovExists">checkMovExists</a></li><li><a href="global.html#checkUsrExists">checkUsrExists</a></li><li><a href="global.html#createToken">createToken</a></li><li><a href="global.html#delMovie">delMovie</a></li><li><a href="global.html#delMovieFromFavorites">delMovieFromFavorites</a></li><li><a href="global.html#delUser">delUser</a></li><li><a href="global.html#deleteMovie">deleteMovie</a></li><li><a href="global.html#deleteMovieFromFavorites">deleteMovieFromFavorites</a></li><li><a href="global.html#express">express</a></li><li><a href="global.html#getAllFavorites">getAllFavorites</a></li><li><a href="global.html#getAllMovie">getAllMovie</a></li><li><a href="global.html#getAllMovies">getAllMovies</a></li><li><a href="global.html#getAllUsers">getAllUsers</a></li><li><a href="global.html#getMovieById">getMovieById</a></li><li><a href="global.html#getMovieByTitle">getMovieByTitle</a></li><li><a href="global.html#getUserByEmail">getUserByEmail</a></li><li><a href="global.html#getUserFavorites">getUserFavorites</a></li><li><a href="global.html#getUserRol">getUserRol</a></li><li><a href="global.html#getUserRole">getUserRole</a></li><li><a href="global.html#getsearchMovieById">getsearchMovieById</a></li><li><a href="global.html#getsearchMovieByTitle">getsearchMovieByTitle</a></li><li><a href="global.html#insertMovie">insertMovie</a></li><li><a href="global.html#insertUser">insertUser</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#port">port</a></li><li><a href="global.html#renewToken">renewToken</a></li><li><a href="global.html#signUpUser">signUpUser</a></li><li><a href="global.html#storage">storage</a></li><li><a href="global.html#updateMovie">updateMovie</a></li><li><a href="global.html#updtMovie">updtMovie</a></li><li><a href="global.html#updtUser">updtUser</a></li><li><a href="global.html#validateInput">validateInput</a></li><li><a href="global.html#validateJWT">validateJWT</a></li><li><a href="global.html#verifyRole">verifyRole</a></li><li><a href="global.html#whiteList">whiteList</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Jun 22 2025 21:08:28 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
