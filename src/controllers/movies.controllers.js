@@ -120,13 +120,18 @@ const getMovieByTitle = async (req, res) => {
  * @returns Guarda la película creada en la base de datos.
  */
 const insertMovie = async (req, res) => {
-  const { filename, originalname, mimetype, size, path } = req.file;
+  console.log('entra en insermovie')
+  // console.log(req.file)
+  console.log(req.body)
+  // const { filename, originalname, mimetype, size, path } = req.file;
   const { title, year_movie, director, genre_id, duration, synopsis } = req.body;
   try {
     const movie = await addMovie(
       title,
-      path,
-      originalname,
+      /* path,
+      originalname, */
+      'https://s.cdnshm.com/catalog/es/t/691578562/erik-editores-marvel-spider-man-gotcha-poster-91-5x61-cm.jpg',
+      'originalname text',
       year_movie,
       director,
       genre_id,

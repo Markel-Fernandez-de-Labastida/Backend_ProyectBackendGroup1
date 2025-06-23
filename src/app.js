@@ -36,7 +36,7 @@ app.use(
 );
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use("/file", express.static(__dirname + "/public/uploads"));
 
 /**

@@ -30,15 +30,15 @@ routes.post("/search", /* [validateJWT, verifyRole('user')], */ getMovieByTitle)
 routes.post(
   "/createMovie",
   [
-    check("title", "Titulo vacio").notEmpty().isString(),
-    check("year_movie", "Año vacio").notEmpty().isString(),
-    check("director", "Director vacio").notEmpty().isString(),
-    check("genre_id", "Géreno vacio").notEmpty(),
-    validateInput,
+    // check("title", "Titulo vacio").notEmpty().isString(),
+    // check("year_movie", "Año vacio").notEmpty().isString(),
+    // check("director", "Director vacio").notEmpty().isString(),
+    // check("genre_id", "Géreno vacio").notEmpty(),
+    // validateInput,
     /* validateJWT,
     verifyRole('admin') */
+    upload.single("file"),
   ],
-  upload.single("file"),
   insertMovie
 );
 
